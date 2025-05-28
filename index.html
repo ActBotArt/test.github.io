@@ -1,8 +1,314 @@
-index.html
 <!DOCTYPE html>
-<html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отправь сообщение в черную дыру</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0c0c0c, #1a1a2e, #16213e);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Звездное небо */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+            to { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.3); }
+        }
+
+        .description {
+            color: #cccccc;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .message-form {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            resize: vertical;
+            margin-bottom: 20px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        textarea:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+        }
+
+        .send-button {
+            background: linear-gradient(45deg, #8a2be2, #4b0082);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
+        }
+
+        .send-button:active {
+            transform: translateY(0);
+        }
+
+        /* Черная дыра */
+        .black-hole {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, #000000 0%, #1a1a2e 40%, #8a2be2 100%);
+            animation: rotate 10s linear infinite;
+            z-index: 3;
+            box-shadow: 
+                0 0 50px rgba(138, 43, 226, 0.8),
+                inset 0 0 50px rgba(0, 0, 0, 0.8);
+        }
+
+        .black-hole::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: #000000;
+            border-radius: 50%;
+            box-shadow: inset 0 0 30px rgba(138, 43, 226, 0.5);
+        }
+
+        @keyframes rotate {
+            0% { transform: translateX(-50%) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg); }
+        }
+
+        /* Летящие листочки */
+        .paper {
+            position: fixed;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 4;
+            padding: 10px;
+            font-size: 14px;
+            max-width: 200px;
+            word-wrap: break-word;
+            transform-origin: center;
+        }
+
+        @keyframes fallToBlackHole {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(calc(100vh + 100px)) rotate(720deg) scale(0.1);
+                opacity: 0;
+            }
+        }
+
+        .counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 5;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .description {
+                font-size: 1em;
+            }
+            
+            .message-form {
+                padding: 20px;
+                margin: 20px 10px;
+            }
+        }
+    </style>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+    <div class="stars"></div>
+    
+    <div class="counter">
+        Сообщений отправлено: <span id="messageCount">0</span>
+    </div>
+
+    <div class="container">
+        <h1>🌌 Черная дыра сообщений 🌌</h1>
+        
+        <div class="description">
+            Напиши любое сообщение и отправь его в бездну космоса.<br>
+            Твои слова превратятся в листочек и исчезнут в черной дыре навсегда...
+        </div>
+
+        <div class="message-form">
+            <textarea id="messageInput" placeholder="Напиши здесь свое сообщение... Может быть, секрет? Мечту? Или просто мысли?"></textarea>
+            <button class="send-button" onclick="sendMessage()">🚀 Отправить в бездну</button>
+        </div>
+    </div>
+
+    <div class="black-hole"></div>
+
+    <script>
+        let messageCount = 0;
+
+        // Создание звезд
+        function createStars() {
+            const starsContainer = document.querySelector('.stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (message === '') {
+                alert('Напиши что-нибудь перед отправкой в бездну!');
+                return;
+            }
+
+            // Создаем листочек с сообщением
+            const paper = document.createElement('div');
+            paper.className = 'paper';
+            paper.textContent = message;
+            
+            // Случайная позиция появления
+            const startX = Math.random() * (window.innerWidth - 200);
+            paper.style.left = startX + 'px';
+            paper.style.top = '-50px';
+            
+            // Добавляем анимацию полета
+            paper.style.animation = 'fallToBlackHole 4s ease-in forwards';
+            
+            document.body.appendChild(paper);
+            
+            // Удаляем листочек после анимации
+            setTimeout(() => {
+                if (paper.parentNode) {
+                    paper.parentNode.removeChild(paper);
+                }
+            }, 4000);
+            
+            // Очищаем поле ввода
+            messageInput.value = '';
+            
+            // Увеличиваем счетчик
+            messageCount++;
+            document.getElementById('messageCount').textContent = messageCount;
+            
+            // Эффект отправки
+            const button = document.querySelector('.send-button');
+            button.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                button.style.transform = 'scale(1)';
+            }, 150);
+        }
+
+        // Отправка по Enter (с Shift+Enter для новой строки)
+        document.getElementById('messageInput').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Инициализация
+        createStars();
+    </script>
 </body>
 </html>
