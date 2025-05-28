@@ -55,7 +55,7 @@ VoidPost - это уникальный интерактивный веб-сай�
 
 ```bash
 # Клонируйте репозиторий
-git clone https://github.com/actbotart/voidpost.git
+git clone https://github.com/ActBotArt/voidpost.github.io.git
 
 # Перейдите в папку проекта
 cd voidpost
